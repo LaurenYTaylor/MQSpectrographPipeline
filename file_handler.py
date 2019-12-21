@@ -1,26 +1,45 @@
 import glob
-import astropy.io.fits as pyfits
+from astropy.io import fits
 import numpy as np
 
-def get_file_type(path):
+def get_file_types(path):
 	bias_frames=[]
 	dark_frames=[]
 	flat_frames=[]
 	cal_frames=[]
 	science_frames=[]
 	
-	filetypes=['bias', 'dark', 'flat', 'thar']
-	filenames = glob.glob(path)
+	filenames = glob.glob(path+'/*')
 	
 	for fn in filenames:
 		if 'bias' in fn:
 			bias_frames.append(fn)
-		else if 'dark' in fn:
+		elif 'dark' in fn:
 			dark_frames.append(fn)
-		else if 'flat' in fn:
+		elif 'flat' in fn:
 			flat_frames.append(fn)
-		else if 'thar' in fn:
+		elif 'thar' in fn:
 			cal_frames.append(fn)
 		else:
 			science_frames.append(fn)
-			
+	
+	return bias_frames, dark_frames, flat_frames, cal_frames, science_frames
+
+def get_header(filename):
+	hdu = fits.open(filename)
+	return hdu[0].header
+
+def get_fibre_frames(path, frames):
+	fiber1_frames=[]
+	fiber2_frames=[]
+	fiber3_frames=[]
+	for frame in frames:
+		header = get_header(frame)
+		header_keys=list(header.keys())
+		if 'FIBER_1' in header_keys:
+			fiber1_frames.append(frame)
+		if 'FIBER_2' in header_keys:
+			fiber2_frames.append(frame)
+		if 'FIBER_3' in header_keys:
+			fiber3_frames.append(frame)
+	return fiber1_frames, fiber2_frames, fiber3_frames
