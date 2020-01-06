@@ -25,7 +25,7 @@ def get_file_types(path):
 	
 	return bias_frames, dark_frames, flat_frames, cal_frames, science_frames
 
-def get_header(filename):
+def get_header(path, filename):
 	hdu = fits.open(filename)
 	return hdu[0].header
 
@@ -34,7 +34,7 @@ def get_fibre_frames(path, frames):
 	fiber2_frames=[]
 	fiber3_frames=[]
 	for frame in frames:
-		header = get_header(frame)
+		header = get_header(path, frame)
 		header_keys=list(header.keys())
 		if 'FIBER_1' in header_keys:
 			fiber1_frames.append(frame)
