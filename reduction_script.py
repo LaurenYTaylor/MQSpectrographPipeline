@@ -34,5 +34,7 @@ fiber2_white_master, fiber2_err = make_master_white(path, fiber2_flat)
 fiber3_white_master, fiber3_err = make_master_white(path, fiber3_flat)
 fibre_white_master, white_err = make_master_white(path, flat_frames) #include all frames or only triple flat?
 print(fibre_white_master)
+
 #Order Tracing#
-	
+poly_fits, mask = trace_orders(fibre1_white_master, debug_level=2, simu=True, maskthresh=20))
+
