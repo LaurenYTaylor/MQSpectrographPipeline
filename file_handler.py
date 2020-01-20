@@ -36,10 +36,11 @@ def get_fibre_frames(path, frames):
 	for frame in frames:
 		header = get_header(path, frame)
 		header_keys=list(header.keys())
-		if 'FIBER_1' in header_keys:
-			fiber1_frames.append(frame)
-		if 'FIBER_2' in header_keys:
-			fiber2_frames.append(frame)
-		if 'FIBER_3' in header_keys:
-			fiber3_frames.append(frame)
+		if sum('FIBER' in key for key in header_keys)==1:
+			if 'FIBER_1' in header_keys:
+				fiber1_frames.append(frame)
+			if 'FIBER_2' in header_keys:
+				fiber2_frames.append(frame)
+			if 'FIBER_3' in header_keys:
+				fiber3_frames.append(frame)
 	return fiber1_frames, fiber2_frames, fiber3_frames

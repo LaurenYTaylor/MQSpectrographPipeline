@@ -31,12 +31,10 @@ def make_master_white(path, flat_frames):
 	for frame in flat_frames:
 		all_img.append(fits.open(frame)[0].data)
 		exptimes.append(get_header(path,frame)["EXPTIME"])
-	print(len(all_img))
 	exptimes_scaled_to_median = np.array(exptimes) / np.median(exptimes)
 	scaled_img = np.array(all_img) / exptimes_scaled_to_median.reshape(len(all_img), 1, 1)
 	median_img = np.median(scaled_img, axis=0)
-	
-	mean_stderr = np.std(scaled_img, axis=0)/np.sqrt(len(all_img))
+	mean_stderr = np.std(scaled_img, axis=0)/np.sqrt(len(all_img)) #-1 here in gh code?
 	median_stderr = 1.253*(mean_stderr/np.sqrt(len(all_img)))
 	
 	return median_img, median_stderr

@@ -6,9 +6,6 @@ import warnings
 from numpy import RankWarning
 import sys 
 
-np.set_printoptions(threshold=sys.maxsize)
-
-warnings.filterwarnings("error", category=RankWarning)
 def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, maskthresh=100., weighted_fits=True, slowmask=False, simu=False, timit=False, debug_level=0):
 	"""
 	Based on Christoph Bergmann's Veloce pipeline, which is based on Julian 
@@ -36,6 +33,8 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 	:return: list of polynomial fits (np.poly1d)
 	:rtype: list
 	"""
+	#np.set_printoptions(threshold=sys.maxsize)
+	warnings.filterwarnings("error", category=RankWarning)
 	
 	if timit:
 		start_time = time.time()
@@ -183,10 +182,9 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 			except RankWarning:
 				print(f"Not enough points in order {i} to fit. Try using a smaller value for maskthresh.")
 				p = np.poly1d([0,0,0])
-			
 		P.append(p)
 
-	if debug_level > 0:
+	if debug_level > -1:
 		plt.figure()
 		plt.imshow(filtered_flat, interpolation='none', vmin=np.min(flat), vmax=0.9 * np.max(flat), cmap=plt.get_cmap('gray'))
 		for p in P:
@@ -194,6 +192,7 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 		plt.ylim((0, ny))
 		plt.xlim((0, nx))
 		plt.show()	  
+		plt.savefig('orders.png')
 		
 	if timit:
 		print('Elapsed time: '+str(time.time() - start_time)+' seconds')
