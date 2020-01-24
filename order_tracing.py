@@ -46,7 +46,7 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 	if debug_level > 1:
 		plt.title(f"Peaks of {len(peak_idxs)} Orders")
 		plt.plot(data)
-		plt.scatter(np.arange(ny)[peaks], np.sqrt(data[peaks]),s=25, c='red')
+		plt.scatter(np.arange(ny)[peaks], data[peaks],s=25, c='red')
 		plt.show()
 		plt.close()
 		plt.imshow(filtered_flat, cmap='gray')

@@ -44,8 +44,8 @@ def extract_stripes(img, P_id, slit_height, return_indices=True, indonly=False, 
 	if return_indices:
 		stripe_indices={}
 	for id, p in sorted(P_id.items()):
-		if debug_level>0:
-			print(f"Extracting stripe {id}...")
+		if debug_level>0 and (id-1)%5==0:
+			print(f"Extracting stripes {id}-{id+4}...")
 		stripe_ind = extract_single_stripe(img, p, slit_height=3, 
 										return_indices=return_indices, 
 										debug_level=0)

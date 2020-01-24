@@ -41,12 +41,12 @@ fiber1_white_master, fiber1_err = make_master_white(path, fiber1_flat)
 #fibre_white_master, white_err = make_master_white(path, flat_frames) #include all frames or only triple flat?
 
 #Order Tracing#
-poly_fits, mask = trace_orders(fiber1_white_master, debug_level=-1, simu=True, maskthresh=20)
+poly_fits, mask = trace_orders(fiber1_white_master, debug_level=2, simu=True, maskthresh=20)
 ids = list(range(1, len(poly_fits)+1))
 P_id = dict(zip(ids, poly_fits))
 
 #Order Extraction#
-stripes, stripe_indices = extract_stripes(fiber1_white_master, P_id, slit_height=3)
+stripes, stripe_indices = extract_stripes(fiber1_white_master, P_id, slit_height=3, debug_level=2)
 err_stripes = extract_stripes(fiber1_err, P_id, slit_height=3, return_indices=False)
 #profiles = fit_profiles(stripes, err_stripes, P_id)
 

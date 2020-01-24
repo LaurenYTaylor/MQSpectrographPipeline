@@ -5,11 +5,8 @@ from matplotlib import pyplot as plt
 def tramline_extraction(stripes, err_stripes):
 	ord_flux={}
 	ord_flux_err={}
+	print("Extracting flux (tramline)...")
 	for id, stripe in stripes.items():
-		print(id)
-		print(stripe.shape)
-		plt.imshow(stripe.toarray(), cmap='gray', origin='lower')
-		plt.show()
 		flat_stripe_flux, flat_stripe_rows = flatten_stripe(stripe)
 		#err_flat_stripe_flux, err_flat_stripe_rows = flatten_stripe(err_stripes[id])
 		flux_by_col = np.sum(flat_stripe_flux, axis=0)

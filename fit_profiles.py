@@ -30,10 +30,9 @@ def flatten_stripe(stripe, slit_height=3):
 	stripe_rows = np.zeros((2*slit_height, nx))
 	
 	# check if whole order falls on CCD in dispersion direction
-	print(len(col_indices))
-	print(nx)
 	if len(col_indices) != nx:	
-		print('WARNING: Not the entire order falls on the CCD:')
+		print(f'WARNING: Not the entire order falls on the CCD: Only {len(col_indices)}/'+
+				f'{nx} columns present... Making empty columns black...')
 	
 	for i in range(len(col_indices)):
 		if i == len(col_indices)-1:
@@ -42,7 +41,12 @@ def flatten_stripe(stripe, slit_height=3):
 		else:
 			flux = flux_vals[col_indices[i]:col_indices[i+1]]         #flux
 			rownum = row_ind[col_indices[i]:col_indices[i+1]]       #row number
-		print(i)
-		stripe_flux[:,i] = flux
-		stripe_rows[:,i] = rownum
+		try:
+			stripe_flux[:,i] = flux
+		except ValueError:
+			stripe_flux[:,i] = np.zeros(slit_height*2)
+		try:
+			stripe_rows[:,i] = rownum
+		except ValueError:
+			stripe_rows[:,i] = stripe_rows[:,i-1]
 	return stripe_flux, stripe_rows.astype(int)
