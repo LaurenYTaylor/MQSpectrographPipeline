@@ -5,21 +5,7 @@ from scipy import sparse
 import sys
 np.set_printoptions(threshold=sys.maxsize)
 def extract_single_stripe(img, p, slit_height=3, return_indices=True, debug_level=0):
-	"""
-	Extracts single stripe from 2d image.
-	This function returns a sparse matrix containing all relevant pixel for a single stripe for a given polynomial p
-	and a given slit height.
-	:param img: 2d echelle spectrum
-	:type img: np.ndarray
-	:param P: polynomial coefficients
-	:type P: np.ndarray
-	:param slit_height: height of the extraction slit (ie the pixel columns are 2*slit_height pixels long)
-	:type slit_height: double
-	:param debug_level: debug level
-	:type debug_level: int
-	:return: extracted spectrum
-	:rtype: scipy.sparse.csc_matrix
-	"""
+
 	#start_time = time.time()
 	img = np.rot90(img)
 	ny, nx = img.shape
@@ -49,9 +35,9 @@ def extract_single_stripe(img, p, slit_height=3, return_indices=True, debug_leve
 	mat = sparse.coo_matrix((img[indices], (y_grid[indices], x_grid[indices])), shape=(ny, nx))
 
 	if return_indices:
-		return mat.tocsc(),indices
+		return mat.tocsr(),indices
 	else:
-		return mat.tocsc()
+		return mat.tocsr()
 			
 def extract_stripes(img, P_id, slit_height, return_indices=True, indonly=False, debug_level=0):
 	stripes={}

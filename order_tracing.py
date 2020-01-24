@@ -12,27 +12,8 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 	Stuermer's Maroon_X pipeline.
 	
 	Locates and fits stripes (ie orders) in a flat field echelle spectrum.
-	
-	Starting in the central column, the algorithm identifies peaks and traces each stripe to the edge of the detector
-	by following the brightest pixels along each order. It then fits a polynomial to each stripe.
-	To improve algorithm stability, the image is first smoothed with a Gaussian filter. It not only eliminates noise, but
-	also ensures that the cross-section profile of the flat becomes peaked in the middle, which helps to identify the
-	center of each stripe. Choose gauss_filter accordingly.
-	To avoid false positives, only peaks above a certain (relative) intensity threshold are used.
-	  
-	:param flat: dark-corrected flat field spectrum
-	:type flat: np.ndarray
-	:param deg_polynomial: degree of the polynomial fit
-	:type deg_polynomial: int
-	:param gauss_filter_sigma: sigma of the gaussian filter used to smooth the image.
-	:type gauss_filter_sigma: float
-	:param min_peak: minimum relative peak height 
-	:type min_peak: float
-	:param debug_level: debug level flag
-	:type debug_level: int
-	:return: list of polynomial fits (np.poly1d)
-	:rtype: list
 	"""
+	
 	#np.set_printoptions(threshold=sys.maxsize)
 	warnings.filterwarnings("error", category=RankWarning)
 	
@@ -50,7 +31,8 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 	data = filtered_flat[:, int(nx / 2)]
 	
 	peaks = np.zeros(data.shape, dtype=bool)
-	peak_idxs = signal.find_peaks(data, height=min_peak*np.max(data))[0]
+	#peak_idxs = signal.find_peaks(data, height=min_peak*np.max(data))[0]
+	peak_idxs = signal.find_peaks(data)[0]
 	#trough_idxs = signal.find_peaks(-data, height=min_peak*np.max(data))[0]
 	peaks[peak_idxs]=True
 	maxima = np.arange(ny)[peak_idxs]
@@ -64,7 +46,7 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 	if debug_level > 1:
 		plt.title(f"Peaks of {len(peak_idxs)} Orders")
 		plt.plot(data)
-		plt.scatter(np.arange(ny)[peaks], data[peaks],s=25, c='red')
+		plt.scatter(np.arange(ny)[peaks], np.sqrt(data[peaks]),s=25, c='red')
 		plt.show()
 		plt.close()
 		plt.imshow(filtered_flat, cmap='gray')

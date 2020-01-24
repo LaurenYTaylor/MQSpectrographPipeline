@@ -12,8 +12,7 @@ def fit_profiles(stripes, err_stripes, P_id, slit_height=3):
 		err_flat_stripe_fluxes[id], err_flat_stripe_rows[id] = flatten_stripe(err_stripes[id])
 	
 	for id in sorted(flat_stripe_fluxes.keys()):
-		profile = fit_order_profile(flat_stripe_rows[id], flat_stripe_fluxes[id], p
-	
+		profile = fit_order_profile(flat_stripe_rows[id], flat_stripe_fluxes[id], p)
 	
 	return flat_stripe_fluxes, flat_stripe_rows
 		
@@ -31,6 +30,8 @@ def flatten_stripe(stripe, slit_height=3):
 	stripe_rows = np.zeros((2*slit_height, nx))
 	
 	# check if whole order falls on CCD in dispersion direction
+	print(len(col_indices))
+	print(nx)
 	if len(col_indices) != nx:	
 		print('WARNING: Not the entire order falls on the CCD:')
 	
@@ -41,6 +42,7 @@ def flatten_stripe(stripe, slit_height=3):
 		else:
 			flux = flux_vals[col_indices[i]:col_indices[i+1]]         #flux
 			rownum = row_ind[col_indices[i]:col_indices[i+1]]       #row number
+		print(i)
 		stripe_flux[:,i] = flux
 		stripe_rows[:,i] = rownum
 	return stripe_flux, stripe_rows.astype(int)

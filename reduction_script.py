@@ -6,7 +6,9 @@ from calibration_functions import make_master_bias, make_master_dark, make_maste
 from order_tracing import trace_orders
 from order_extraction import extract_stripes
 from scipy import sparse
+from matplotlib import pyplot as plt
 from fit_profiles import fit_profiles
+from extraction_methods import tramline_extraction
 
 data_file="New Simulated Spectra"
 
@@ -39,11 +41,19 @@ fiber1_white_master, fiber1_err = make_master_white(path, fiber1_flat)
 #fibre_white_master, white_err = make_master_white(path, flat_frames) #include all frames or only triple flat?
 
 #Order Tracing#
-poly_fits, mask = trace_orders(fiber1_white_master, debug_level=0, simu=True, maskthresh=20)
+poly_fits, mask = trace_orders(fiber1_white_master, debug_level=-1, simu=True, maskthresh=20)
 ids = list(range(1, len(poly_fits)+1))
 P_id = dict(zip(ids, poly_fits))
 
 #Order Extraction#
 stripes, stripe_indices = extract_stripes(fiber1_white_master, P_id, slit_height=3)
 err_stripes = extract_stripes(fiber1_err, P_id, slit_height=3, return_indices=False)
-profiles = fit_profiles(stripes, err_stripes, P_id)
+#profiles = fit_profiles(stripes, err_stripes, P_id)
+
+#Science Image Processing#
+#thar_pfits, thar_mask = trace_orders(fits.open(cal_frames[0])[0].data, debug_level=2, simu=True, maskthresh=20)
+
+#below doesn't do anything yet..
+#_ = process_cal_images(cal_frames)
+#_ = process_science_images(science_frames)
+flux_dict = tramline_extraction(stripes, err_stripes)
