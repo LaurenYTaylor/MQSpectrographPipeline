@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from scipy import sparse
 import sys
 np.set_printoptions(threshold=sys.maxsize)
-def extract_single_stripe(img, p, slit_height=3, return_indices=True, debug_level=0):
+def extract_single_stripe(img, p, slit_height=3, debug_level=0):
 
 	#start_time = time.time()
 	img = np.rot90(img)
@@ -25,25 +25,23 @@ def extract_single_stripe(img, p, slit_height=3, return_indices=True, debug_leve
 		plt.show()
 	indices = abs(distance) <= slit_height
 	
-	
 	if debug_level > 1:
 		plt.figure()
-		plt.imshow(img, cmap='gray')
-		plt.imshow(indices, origin='lower', alpha=0.5)
+		plt.imshow(img, cmap='gray', origin='lower')
+		plt.imshow(indices, origin='lower', alpha=0.1)
 		plt.show()
-
+	
 	mat = sparse.coo_matrix((img[indices], (y_grid[indices], x_grid[indices])), shape=(ny, nx))
 
-	if return_indices:
-		return mat.tocsr(),indices
-	else:
-		return mat.tocsr()
+	return mat.tocsr()
 			
-def extract_stripes(img, P_id, slit_height, return_indices=True, indonly=False, debug_level=0):
+def extract_stripes(img, P_id, slit_height, return_indices=False, indonly=False, debug_level=0):
 	stripes={}
 	if return_indices:
 		stripe_indices={}
 	for id, p in sorted(P_id.items()):
+		if id>5:
+			break
 		if debug_level>0 and (id-1)%5==0:
 			print(f"Extracting stripes {id}-{id+4}...")
 		stripe_ind = extract_single_stripe(img, p, slit_height=3, 
@@ -57,7 +55,6 @@ def extract_stripes(img, P_id, slit_height, return_indices=True, indonly=False, 
 	
 	if return_indices: 
 		return stripes, stripe_indices
-		exit()
 	else:
 		return stripes
-		exit()
+		

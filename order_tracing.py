@@ -166,7 +166,7 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 				p = np.poly1d([0,0,0])
 		P.append(p)
 
-	if debug_level > -1:
+	if debug_level > 0:
 		plt.figure()
 		plt.imshow(filtered_flat, interpolation='none', vmin=np.min(flat), vmax=0.9 * np.max(flat), cmap=plt.get_cmap('gray'))
 		for p in P:
