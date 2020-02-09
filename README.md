@@ -46,7 +46,7 @@ The order extraction created a sparse matrix for each order. The sparse matrix s
 
 ##### STEP 6: TRAMLINE EXTRACTION
 
-This first uses `flatten_stripes` to make a rectangular array of the intensities of the order, shape = x_dim *x* (slit_height\*2). The tramline extraction then moved along the columns of the array and adds up the intensities in the cross-dispersion direction. 
+This first uses `flatten_stripes` to make a rectangular array of the intensities of the order, shape = *x_dim* x *(slit_height\*2)*. The tramline extraction then moved along the columns of the array and adds up the intensities in the cross-dispersion direction. 
 
 *TODO: Include fractional intensities from the partial pixels cut through by the tramlines.*
 
@@ -54,6 +54,6 @@ This first uses `flatten_stripes` to make a rectangular array of the intensities
 
 General TODOs:
 
-1. Do errors properly. A white error image is calculated in make_master_white but it needs to b propagated through the script, and same for ThAr and science images.
+1. Do errors properly. A white error image is calculated in make_master_white but it needs to be propagated through the script, and same for ThAr and science images.
 2. Background and cosmic ray subtraction.
 3. Wavelength solution.
