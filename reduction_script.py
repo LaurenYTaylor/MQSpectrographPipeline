@@ -9,7 +9,7 @@ from scipy import sparse
 from matplotlib import pyplot as plt
 from fit_profiles import fit_profiles
 from extraction_methods import tramline_extraction
-
+import warnings
 data_file="New Simulated Spectra"
 
 #Open Files#
@@ -20,17 +20,19 @@ x_dim = 4096
 y_dim = 4096
 
 #Bias Frames#
-if bias_frames:
-	master_bias = make_master_bias(path, bias_frames)
-else:
+bias_frame_data = [fits.open(path+"/"+frame)[0].data for frame in bias_frames]
+warnings.filterwarnings("error", category=RuntimeWarning)
+try:
+	master_bias = make_master_bias(path, bias_frame_data)
+except RuntimeWarning:
+	print("Warning: List of bias frames is empty.")
 	master_bias = np.zeros((x_dim, y_dim))
 
 #Dark Frames#
-if dark_frames:
-	dark_frame_data = [fits.open(path+"/"+frame)[0].data for frame in dark_frames]
-	dark_frame_data = dark_frame_data - master_bias
-	master_dark = make_master_dark(path, dark_frame_data)
-else:
+try:
+	master_dark = make_master_dark(path, dark_frames, master_bias)
+except IndexError:
+	print("Warning: List of dark frames is empty.")
 	master_dark = np.zeros((x_dim, y_dim))
 
 #Flat Frames#

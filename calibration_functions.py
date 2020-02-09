@@ -3,13 +3,9 @@ from file_handler import get_header
 from astropy.io import fits
 
 def make_master_bias(path, bias_frames):
-	try:
-		return np.nanmedian([fits.open(path+"/"+frame)[0].data for frame in bias_frames])
-	except:
-		print("Warning: List of bias frames is empty.")
-		return
+	return np.nanmedian(bias_frames)
 		
-def make_master_dark(path, dark_frames, scale=False):
+def make_master_dark(path, dark_frames, mb, scale=False):
 	exptimes={}
 	for frame in dark_frames:
 		exptimes[frame] = get_header(path, frame)["EXPTIME"]
@@ -20,9 +16,13 @@ def make_master_dark(path, dark_frames, scale=False):
 			darks_grouped_by_exptime.append(frames_sorted_by_exptime[np.where(frames_sorted_by_exptime[:][1]==exp_time)])
 		master_dark=[]
 		for exptime_group in darks_grouped_by_exptime:
-			master_dark.append(np.nanmedian([fits.open(path+"/"+frame)[0].data for frame in exptime_group]))
+			data = [fits.open(path+"/"+frame)[0].data for frame in exptime_group]
+			data_bias_sub = [frame - mb for frame in data]
+			master_dark.append(np.nanmedian(data_bias_sub))
 	else:
-		master_dark = np.nanmedian([fits.open(path+"/"+frame)[0].data/get_header(path,frame)["EXPTIME"] for frame in dark_frames])
+		scaled_data = [fits.open(path+"/"+frame)[0].data/get_header(path,frame)["EXPTIME"] for frame in dark_frames]
+		scaled_bias_sub = [frame - mb for frame in scaled_data]
+		master_dark = np.nanmedian(scaled_bias_sub)
 	return master_dark
 	
 def make_master_white(path, flat_frames):

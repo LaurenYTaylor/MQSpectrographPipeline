@@ -13,9 +13,7 @@ def trace_orders(flat, deg_polynomial=2, gauss_filter_sigma=3., min_peak=0.05, m
 	
 	Locates and fits stripes (ie orders) in a flat field echelle spectrum.
 	"""
-	
-	#np.set_printoptions(threshold=sys.maxsize)
-	warnings.filterwarnings("error", category=RankWarning)
+	warnings.filterwarnings("error", category=RankWarning) #So it can be handled in try/except block
 	
 	if timit:
 		start_time = time.time()

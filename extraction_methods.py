@@ -1,8 +1,41 @@
 import numpy as np
-from fit_profiles import flatten_stripe
 from matplotlib import pyplot as plt
 from numpy import poly1d
 
+def flatten_stripe(stripe, slit_height=3, debug_level=0): 
+	ny, nx = stripe.todense().shape
+	row_ind = sparse.find(stripe)[0]
+	col_ind = sparse.find(stripe)[1]
+	flux_vals = sparse.find(stripe)[2]
+
+	stripe_flux = np.zeros((2*slit_height, nx))
+	
+	col_flux = {}
+	col_rows = {}
+	for i, col in enumerate(col_ind):
+		if col in col_flux.keys():
+			col_flux[col].append(flux_vals[i])
+			col_rows[col].append(row_ind[i])
+		else:
+			col_flux[col] = [flux_vals[i]]	
+			col_rows[col] = [row_ind[i]]			
+			
+	for k, v in col_flux.items():
+		n=len(v)
+		if n == slit_height*2:
+			stripe_flux.T[k]=v
+		else:
+			v.extend([0]*(2*slit_height-n))
+			stripe_flux.T[k]=v
+			
+	if debug_level>0:
+		plt.imshow(stripe_flux, cmap='gray',origin='lower')
+		plt.title("Section of flattened stripe")
+		plt.xlim(nx-100,nx-1)
+		plt.show()
+
+	return stripe_flux, col_rows
+	
 def tramline_extraction(P_id, stripes, slit_height=3, debug_level=0):
 	ord_flux={}
 	ord_flux_err={}
