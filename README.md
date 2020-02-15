@@ -44,11 +44,25 @@ The order extraction created a sparse matrix for each order. The sparse matrix s
 
 `extract_stripes` is in order_extraction.py. `slit_height` is currently set as `slit_height=3`, as the height of the orders seemed to be around 6 by inspection.
 
-##### STEP 6: TRAMLINE EXTRACTION
+##### STEP 6: EXTRACTION
 
-This first uses `flatten_stripes` to make a rectangular array of the intensities of the order, shape = *x_dim* x *(slit_height\*2)*. The tramline extraction then moved along the columns of the array and adds up the intensities in the cross-dispersion direction. 
+This first uses `flatten_stripes` to make a rectangular array of the intensities of the order, shape = *x_dim* x *(slit_height\*2)*. The tramline then moves along the columns of the array and adds up the intensities in the cross-dispersion direction. 
 
-*TODO: Include fractional intensities from the partial pixels cut through by the tramlines.*
+*TODO: Find tramlines and include fractional intensities from the partial pixels cut through by the tramlines.*
+
+
+
+**STEP 7: WAVELENGTH SOLUTION**
+
+Good peaks are found using `find_good_peaks`within the extracted Arc lamp simulated data (thar_1d), and the position of the peaks (in pixels) is noted. Some manual effort is then required to find the small section of peaks within the larger wavelength reference spectrum from ThAr.csv. The position of the peaks (in wavelength) is noted for the reference spectrum, and the wavelength range for the order is found using `find_wavelength_slice`. A polynomial is then fit to the peak positions, to map the pixel positions to a wavelength, using `pixel_wavelength_map`. Not all peaks show up in both spectra, some will have to be removed for a good fit to be found. This must be done manually (np.delete is useful for removing items in a list at a specified index). 
+
+`find_good_peaks`, `find_wavelength_slice`, and `pixel_wavelength_map` are in wavelength_solution.py. It is faster to access them in the order given in the file wavelength_solution_from_file.py once you have the ThAr extracted into a fits file.
+
+*TODO: Find the wavlength solution for order 22-78, the first 22 orders are done, just ran out of time to process the rest of them.* 
+
+
+
+**The file order_coeffs.csv contains the coefficients for the fits for the first 22 orders.**
 
 
 
@@ -56,4 +70,3 @@ General TODOs:
 
 1. Do errors properly. A white error image is calculated in make_master_white but it needs to be propagated through the script, and same for ThAr and science images.
 2. Background and cosmic ray subtraction.
-3. Wavelength solution.

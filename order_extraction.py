@@ -38,8 +38,8 @@ def extract_stripes(img, P_id, slit_height, indonly=False, debug_level=0):
 	for id, p in sorted(P_id.items()):
 		#The following if-statement is just for testing, 
 		#if you don't want to go through every order..
-		if id>5:
-			break
+		#if id>5:
+			#break
 		if debug_level>0 and (id-1)%5==0:
 			print(f"Extracting stripes {id}-{id+4}...")
 		stripe_ind = extract_single_stripe(img, p, slit_height=3, debug_level=0)
