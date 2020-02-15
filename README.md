@@ -62,7 +62,7 @@ Good peaks are found using `find_good_peaks`within the extracted Arc lamp simula
 
 
 
-**The file order_coeffs.csv contains the coefficients for the fits for the first 22 orders.**
+**The file order_coeffs.csv contains the starting wavelengths and coefficients for the fits for the first 22 orders.**
 
 
 
